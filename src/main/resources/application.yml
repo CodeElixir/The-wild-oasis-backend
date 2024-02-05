@@ -1,0 +1,53 @@
+# Datasource properties
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: wildoasis
+    password: wildoasis
+    url: jdbc:oracle:thin:@//172.17.0.1:1521/ORCLPDB1
+
+# Hikari properties
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 100
+
+# Hibernate(JPA) properties
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# Enable ANSI color support in terminal for logs
+  output:
+    ansi:
+      enabled: always
+
+# CORS properties
+cors:
+  allowed-origins: "http://localhost:5173/"
+  allowed-methods: "GET,POST,PATCH,PUT,OPTIONS,DELETE"
+  allowed-headers: "Authorization,Content-Type,X-XSRF-TOKEN,ACCEPT"
+  exposed-headers: "Authorization"
+
+# JWT Token properties (Custom)
+application:
+  security:
+    jwt:
+      issuer: TheWildOasis
+      secret-key: Q1d4NjBZY1RjbEY4djNLVGRENHZKc2h5NGNqOXhoRlM4NWM2MnlINGFPbXF1ekw4VXgrOE9RZzU0NU5sdzJZcw==
+      expiration: 86400000 # a day (86400000)
+      refresh-token:
+        expiration: 172800000 # 7 days (604800000)
+        cookie-name: REFRESH_TOKEN
+      request-header-name: "Authorization"
+
+# Logging
+logging:
+  file:
+    name: logs/WildOasis.log
+  level:
+    root: info
+    com.thewildoasis: debug
