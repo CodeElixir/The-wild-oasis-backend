@@ -44,6 +44,14 @@ application:
         cookie-name: REFRESH_TOKEN
       request-header-name: "Authorization"
 
+
+# AWS Region
+aws:
+  region: ap-south-1
+  s3:
+    bucket: wild-oasis
+
+
 # Logging
 logging:
   file:
@@ -51,3 +59,4 @@ logging:
   level:
     root: info
     com.thewildoasis: debug
+

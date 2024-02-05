@@ -11,9 +11,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -45,5 +47,18 @@ public class UserController {
     @PostMapping("/changePassword")
     public ResponseEntity<User> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest, Principal principal) {
         return ResponseEntity.ok(getUserService().changePassword(changePasswordRequest, principal));
+    }
+
+    @PostMapping(value = "/uploadAvatar/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> uploadAvatar(@PathVariable Integer id,
+                                                    @RequestBody MultipartFile file) {
+        return ResponseEntity.ok(userService.uploadAvatar(id, file));
+    }
+
+    @GetMapping(value = "{id}/avatar",
+            produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getUserAvatar(@PathVariable("id") Integer id) {
+        return userService.getAvatar(id);
     }
 }

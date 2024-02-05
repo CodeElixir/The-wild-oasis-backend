@@ -43,8 +43,7 @@ public class Cabin extends BaseEntity {
     @Column(name = "description", nullable = false, length = 1000)
     private String description;
 
-    @NotBlank(message = "Image must not be blank.")
-    @Column(name = "image", nullable = false)
+    @Column(name = "image")
     private String image;
 
 //    @JsonIgnore

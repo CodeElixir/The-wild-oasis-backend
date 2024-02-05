@@ -6,9 +6,11 @@ import com.thewildoasis.modules.cabins.service.ICabinsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -48,12 +50,25 @@ public class CabinsController {
     }
 
     @PostMapping("/saveAll")
-    private ResponseEntity<ResponseDto> saveAll(@Valid @RequestBody List<Cabin> cabins) {
+    private ResponseEntity<List<Cabin>> saveAll(@Valid @RequestBody List<Cabin> cabins) {
         return ResponseEntity.ok(getCabinsService().insertAll(cabins));
     }
 
     @GetMapping("/ids")
     public ResponseEntity<List<Integer>> getCabinIds() {
         return ResponseEntity.ok(getCabinsService().findCabinIds());
+    }
+
+    @PostMapping(value = "/uploadImage/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> uploadCabinImage(@PathVariable Integer id,
+                                                        @RequestBody MultipartFile file) {
+        return ResponseEntity.ok(cabinsService.uploadCabinImage(id, file));
+    }
+
+    @GetMapping(value = "{id}/cabin-image",
+            produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getCabinImage(@PathVariable("id") Integer id) {
+        return cabinsService.getCabinImage(id);
     }
 }

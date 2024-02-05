@@ -7,6 +7,7 @@ import com.thewildoasis.modules.users.dto.ChangePasswordRequest;
 import com.thewildoasis.modules.users.dto.UpdateUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -20,4 +21,7 @@ public interface IUserService {
 
     User changePassword(ChangePasswordRequest passwordRequest, Principal principal);
 
+    ResponseDto uploadAvatar(Integer id, MultipartFile file);
+
+    byte[] getAvatar(Integer id);
 }
