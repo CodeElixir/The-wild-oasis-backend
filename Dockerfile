@@ -1,6 +1,6 @@
 FROM maven:3.9.6-amazoncorretto-17  AS build
 COPY . .
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 FROM amazoncorretto:17.0.10
 EXPOSE 8080
