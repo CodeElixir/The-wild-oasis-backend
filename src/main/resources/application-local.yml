@@ -1,0 +1,26 @@
+# Datasource properties
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: wildoasis
+    password: wildoasis
+    url: jdbc:oracle:thin:@//172.17.0.1:1521/ORCLPDB1
+
+  # Hibernate(JPA) properties
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# CORS properties
+cors:
+  allowed-origins: "http://localhost:5173/"
+
+# JWT Token properties (Custom)
+application:
+  security:
+    jwt:
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 172800000 # 2 days
