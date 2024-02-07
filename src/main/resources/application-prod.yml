@@ -1,3 +1,7 @@
 # CORS properties
 cors:
   allowed-origin-patterns: "https://codeelixir.github.io/"
+
+# Cookie domain
+cookie:
+  domain: codeelixir.github.io

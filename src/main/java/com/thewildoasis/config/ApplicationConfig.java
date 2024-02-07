@@ -1,9 +1,8 @@
 package com.thewildoasis.config;
 
 import com.thewildoasis.modules.users.repository.IUserRepository;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,12 +12,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
     private final IUserRepository userRepository;
+
+    @Value("${cookie.domain}")
+    private String cookieDomain;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -40,9 +44,15 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
-    public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
-        return CookieSameSiteSupplier.ofNone().when(Cookie::getSecure);
+    public CsrfTokenRepository cookieCsrfTokenRepository() {
+        CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
+        cookieCsrfTokenRepository.setCookieCustomizer(responseCookieBuilder -> {
+            responseCookieBuilder
+                    .httpOnly(false)
+                    .domain(cookieDomain)
+                    .build();
+        });
+        return cookieCsrfTokenRepository;
     }
 }
