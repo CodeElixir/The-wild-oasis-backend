@@ -1,7 +1,9 @@
 package com.thewildoasis.config;
 
 import com.thewildoasis.modules.users.repository.IUserRepository;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,4 +40,9 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+    @Bean
+    public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
+        return CookieSameSiteSupplier.ofNone().when(Cookie::getSecure);
+    }
 }
