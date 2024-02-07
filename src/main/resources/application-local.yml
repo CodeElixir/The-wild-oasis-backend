@@ -15,7 +15,7 @@ spring:
 
 # CORS properties
 cors:
-  allowed-origins: "http://localhost:5173/"
+  allowed-origin-patterns: "http://localhost:5173/"
 
 # JWT Token properties (Custom)
 application:

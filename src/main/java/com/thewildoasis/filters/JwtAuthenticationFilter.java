@@ -1,6 +1,5 @@
 package com.thewildoasis.filters;
 
-import com.thewildoasis.config.SecurityConfig;
 import com.thewildoasis.entities.Token;
 import com.thewildoasis.entities.User;
 import com.thewildoasis.helpers.JwtService;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 
 @Component
@@ -75,6 +73,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // Don't apply this filter on public paths
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
-        return request.getServletPath().contains("/api/v1/auth");
+        return request.getServletPath().contains("/api/v1/auth") ||
+                request.getServletPath().contains("/api/v1/ping");
     }
 }

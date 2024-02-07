@@ -3,7 +3,6 @@ package com.thewildoasis.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thewildoasis.dto.ErrorResponseDto;
 import com.thewildoasis.dto.ResponseDto;
-import com.thewildoasis.filters.CsrfCookieFilter;
 import com.thewildoasis.filters.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -29,6 +27,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
+            "/api/v1/ping",
             "/api/v1/auth/**",
             "/api/v1/users/register",
             "/api/v1/users/{id}/avatar",
@@ -36,12 +35,11 @@ public class SecurityConfig {
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CsrfCookieFilter csrfCookieFilter;
     private final LogoutService logoutService;
     private final ObjectMapper objectMapper;
 
-    @Value("#{'${cors.allowed-origins}'.split(',')}")
-    private List<String> allowedOrigins;
+    @Value("#{'${cors.allowed-origin-patterns}'.split(',')}")
+    private List<String> allowedOriginPatterns;
     @Value("#{'${cors.allowed-methods}'.split(',')}")
     private List<String> allowedMethods;
     @Value("#{'${cors.allowed-headers}'.split(',')}")
@@ -56,16 +54,14 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrfConfigurer -> csrfConfigurer.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()))
-//                .addFilterAfter(csrfCookieFilter, UsernamePasswordAuthenticationFilter.class)
+                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()).ignoringRequestMatchers(WHITE_LIST_URL[0]))
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowCredentials(true);
-//                    configuration.setAllowedOrigins(allowedOrigins);
                     configuration.setAllowedMethods(allowedMethods);
                     configuration.setAllowedHeaders(allowedHeaders);
                     configuration.setExposedHeaders(exposedHeaders);
-                    configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+                    configuration.setAllowedOriginPatterns(allowedOriginPatterns);
                     configuration.setMaxAge(3600L);
                     return configuration;
                 }))
@@ -104,7 +100,6 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_OK);
                             objectMapper.writeValue(response.getOutputStream(), responseDto);
                         }));
-//        http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }
