@@ -28,9 +28,6 @@ public class AuthHelper {
     @Value("${application.security.jwt.refresh-token.cookie-name}")
     private String refreshTokenCookieName;
 
-    @Value("${cookie.domain}")
-    private String cookieDomain;
-
     public AuthenticationResponse getAuthenticationResponse(HttpServletRequest request, HttpServletResponse response, User user) {
         Token token = getToken(user);
         revokeAllUserTokens(user);
@@ -71,10 +68,7 @@ public class AuthHelper {
                 .maxAge(Duration.between(LocalDateTime.now(),
                         jwtService.extractExpiration(refreshToken).toInstant()
                                 .atZone(ZoneId.systemDefault()).toLocalDateTime()))
-                .httpOnly(true)
-                .domain(cookieDomain)
-                .build();
-
+                .httpOnly(true).build();
         Cookie cookie = mapToCookie(responseCookie);
         response.addCookie(cookie);
     }

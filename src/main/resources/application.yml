@@ -39,7 +39,7 @@ application:
       expiration: 86400000 # a day (86400000)
       refresh-token:
         expiration: 604800000 # 7 days (604800000)
-        cookie-name: REFRESH-TOKEN
+        cookie-name: REFRESH_TOKEN
       request-header-name: "Authorization"
 
 

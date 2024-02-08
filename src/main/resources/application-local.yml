@@ -24,7 +24,3 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 172800000 # 2 days
-
-# Cookie domain
-cookie:
-  domain: localhost
