@@ -146,24 +146,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleNoResourceFoundException(
-            NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
-        HttpServletRequest httpServletRequest = ((ServletWebRequest) request).getRequest();
-        if (httpServletRequest.getServletPath().startsWith("/api") ||
-        !httpServletRequest.getMethod().equals(HttpMethod.GET.name())) {
-            ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
-                    request.getDescription(false),
-                    HttpStatus.NOT_FOUND,
-                    ex.getMessage(),
-                    LocalDateTime.now()
-            );
-            return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
-        } else {
-            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/")).build();
-        }
-    }
+//    @Override
+//    protected ResponseEntity<Object> handleNoResourceFoundException(
+//            NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+//
+//        HttpServletRequest httpServletRequest = ((ServletWebRequest) request).getRequest();
+//        if (httpServletRequest.getServletPath().startsWith("/api") ||
+//        !httpServletRequest.getMethod().equals(HttpMethod.GET.name())) {
+//            ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+//                    request.getDescription(false),
+//                    HttpStatus.NOT_FOUND,
+//                    ex.getMessage(),
+//                    LocalDateTime.now()
+//            );
+//            return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/")).build();
+//        }
+//    }
 
     @ExceptionHandler({Exception.class, GlobalAppException.class, DataAccessException.class})
     public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception exception,
