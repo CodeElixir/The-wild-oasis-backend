@@ -33,11 +33,9 @@ public class AuthHelper {
 
     public AuthenticationResponse getAuthenticationResponse(HttpServletRequest request, HttpServletResponse response, User user) {
         Token token = getToken(user);
-        if (!user.getTokens().isEmpty()) {
-            revokeAllUserTokens(user);
-        }
+        revokeAllUserTokens(user);
         tokenRepository.save(token);
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.findById(user.getId()).orElseThrow();
         setRefreshCookie(request, response, jwtService.generateRefreshToken(user));
         return AuthenticationResponse.builder()
                 .user(savedUser)
