@@ -39,7 +39,7 @@ application:
       expiration: 86400000 # a day (86400000)
       refresh-token:
         expiration: 604800000 # 7 days (604800000)
-        cookie-name: REFRESH_TOKEN
+        cookie-name: REFRESH-TOKEN
       request-header-name: "Authorization"
 
 
@@ -53,7 +53,7 @@ aws:
 # Logging
 logging:
   file:
-    name: logs/WildOasis.log
+    name: logs/the-wild-oasis.log
   level:
     root: info
     com.thewildoasis: debug

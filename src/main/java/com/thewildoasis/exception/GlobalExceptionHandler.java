@@ -2,12 +2,10 @@ package com.thewildoasis.exception;
 
 import com.thewildoasis.dto.ErrorResponseDto;
 import com.thewildoasis.dto.ValidationErrorsDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
@@ -15,9 +13,12 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +144,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoResourceFoundException(
+            NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        HttpServletRequest httpServletRequest = ((ServletWebRequest) request).getRequest();
+        if (httpServletRequest.getServletPath().startsWith("/api") ||
+        !httpServletRequest.getMethod().equals(HttpMethod.GET.name())) {
+            ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+                    request.getDescription(false),
+                    HttpStatus.NOT_FOUND,
+                    ex.getMessage(),
+                    LocalDateTime.now()
+            );
+            return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+        } else {
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/")).build();
+        }
     }
 
     @ExceptionHandler({Exception.class, GlobalAppException.class, DataAccessException.class})

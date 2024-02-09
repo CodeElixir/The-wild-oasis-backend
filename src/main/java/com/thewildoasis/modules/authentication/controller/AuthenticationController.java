@@ -32,7 +32,7 @@ public class AuthenticationController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request, HttpServletResponse response,
-                                                               @CookieValue("REFRESH_TOKEN") String refreshToken) throws AccessDeniedException {
+                                                               @CookieValue(value = "${application.security.jwt.refresh-token.cookie-name}") String refreshToken) throws AccessDeniedException {
         AuthenticationResponse authenticationResponse = getAuthenticationService().refreshToken(request, response, refreshToken);
         return ResponseEntity.ok(authenticationResponse);
     }

@@ -31,7 +31,9 @@ public class SecurityConfig {
             "/api/v1/auth/**",
             "/api/v1/users/register",
             "/api/v1/users/{id}/avatar",
-            "/api/v1/cabins/{id}/cabin-image"
+            "/api/v1/cabins/{id}/cabin-image",
+            "/*",
+            "/assets/*"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

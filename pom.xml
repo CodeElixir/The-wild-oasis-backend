@@ -3,21 +3,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.thewildoasis</groupId>
+        <artifactId>The-wild-oasis</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.thewildoasis</groupId>
-    <artifactId>The-wild-oasis</artifactId>
+
+    <groupId>com.thewildoasis-backend</groupId>
+    <artifactId>the-wild-oasis-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>The-wild-oasis</name>
-    <description>The-wild-oasis</description>
+
+    <name>The-wild-oasis-backend</name>
+    <description>Backend code for the-wild-oasis</description>
+
     <properties>
-        <java.version>17</java.version>
         <aws.java.sdk.version>2.23.17</aws.java.sdk.version>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -126,22 +126,4 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

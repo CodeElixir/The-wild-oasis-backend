@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +22,11 @@ public class LogoutService implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         final String token = jwtService.extractTokenFromHeader(request);
-        Optional<Token> optionalToken = tokenRepository.findByToken(token);
-        if (token != null && optionalToken.isPresent()) {
-            Token storedToken = optionalToken.get();
-            storedToken.setExpired(true);
-            storedToken.setRevoked(true);
-            tokenRepository.save(storedToken);
-        }
+        List<Token> tokens = tokenRepository.findByToken(token);
+        Iterable<Integer> ids = tokens
+                .stream()
+                .mapToInt(Token::getId)
+                .boxed().toList();
+        tokenRepository.deleteAllByIdInBatch(ids);
     }
 }

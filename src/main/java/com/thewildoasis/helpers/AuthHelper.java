@@ -4,11 +4,13 @@ import com.thewildoasis.entities.Token;
 import com.thewildoasis.entities.TokenType;
 import com.thewildoasis.entities.User;
 import com.thewildoasis.modules.authentication.dto.AuthenticationResponse;
+import com.thewildoasis.modules.tokens.repository.ITokenRepository;
 import com.thewildoasis.modules.users.repository.IUserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import java.time.ZoneId;
 public class AuthHelper {
 
     private final IUserRepository userRepository;
+    private final ITokenRepository tokenRepository;
     private final JwtService jwtService;
 
     @Value("${application.security.jwt.refresh-token.cookie-name}")
@@ -30,8 +33,10 @@ public class AuthHelper {
 
     public AuthenticationResponse getAuthenticationResponse(HttpServletRequest request, HttpServletResponse response, User user) {
         Token token = getToken(user);
-        revokeAllUserTokens(user);
-        user.getTokens().add(token);
+        if (!user.getTokens().isEmpty()) {
+            revokeAllUserTokens(user);
+        }
+        tokenRepository.save(token);
         User savedUser = userRepository.save(user);
         setRefreshCookie(request, response, jwtService.generateRefreshToken(user));
         return AuthenticationResponse.builder()
@@ -41,13 +46,11 @@ public class AuthHelper {
     }
 
     private void revokeAllUserTokens(User user) {
-        user.getTokens().forEach(token -> {
-            if (!token.getExpired() || !token.getRevoked()) {
-                token.setExpired(true);
-                token.setRevoked(true);
-//                user.getTokens().remove(token);
-            }
-        });
+        Iterable<Integer> ids = user.getTokens()
+                .stream()
+                .mapToInt(Token::getId)
+                .boxed().toList();
+        tokenRepository.deleteAllByIdInBatch(ids);
     }
 
     public Token getToken(User user) {
