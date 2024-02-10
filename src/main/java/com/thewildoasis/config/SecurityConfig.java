@@ -33,7 +33,8 @@ public class SecurityConfig {
             "/api/v1/users/{id}/avatar",
             "/api/v1/cabins/{id}/cabin-image",
             "/*",
-            "/assets/*"
+            "/assets/*",
+            "/cabins/*"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

@@ -4,7 +4,7 @@ spring:
 # Hikari properties
     hikari:
       connection-timeout: 60000
-      maximum-pool-size: 100
+      maximum-pool-size: 10
 
 # Active profile
   profiles:
