@@ -1,7 +1,6 @@
 package com.thewildoasis.modules.settings.service;
 
 import com.thewildoasis.entities.Settings;
-import com.thewildoasis.exception.SettingsNotFoundException;
 import com.thewildoasis.modules.settings.repository.ISettingsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +21,6 @@ public class SettingsServiceImpl implements ISettingsService {
 
     @Override
     public Settings updateSettings(Settings settings) {
-        if (settingsRepository.existsById(settings.getId())) {
-            return settingsRepository.save(settings);
-        } else throw new SettingsNotFoundException("Settings not found to update");
+        return settingsRepository.save(settings);
     }
 }
